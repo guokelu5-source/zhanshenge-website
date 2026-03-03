@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>众神阁 - 逆战未来金牌社团</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif}
+body{
+    background:#0c0f2a;color:#fff;padding:15px;
+    position:relative;overflow-x:hidden;font-size:14px;
+}
+@keyframes bgShine{0%{background-position:0 0}100%{background-position:200% 0}}
+body::before{
+    content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+    background:linear-gradient(90deg,#00336622,#00669922,#00336622);
+    background-size:200% 100%;animation:bgShine 8s linear infinite;z-index:-1;
+}
+@keyframes neon{
+    0%{box-shadow:0 0 5px #00ccff,0 0 10px #0066ff}
+    50%{box-shadow:0 0 10px #00ccff,0 0 20px #0066ff}
+    100%{box-shadow:0 0 5px #00ccff,0 0 10px #0066ff}
+}
+.logo{
+    text-align:center;font-size:36px;font-weight:bold;color:#00ccff;
+    text-shadow:0 0 8px #00ccff,0 0 20px #0066ff;
+    margin:20px 0;animation:neon 3s infinite alternate;
+}
+.slogan{
+    text-align:center;font-size:14px;line-height:1.5;color:#fff;
+    text-shadow:0 0 6px #00ccff;margin-bottom:15px;
+}
+.login-bar{text-align:center;margin-bottom:15px;}
+input,button{
+    background:#1a2350;border:1px solid #0099cc;color:#fff;
+    padding:5px 8px;border-radius:4px;margin:0 4px;
+    outline:none;transition:.2s;font-size:14px;
+}
+button{background:#0077cc;cursor:pointer}
+button:hover{background:#0099ff;transform:scale(1.05);box-shadow:0 0 8px #0099ff}
+.notice{
+    background:#152046;border-left:4px solid #ffcc00;padding:10px 12px;
+    border-radius:6px;margin-bottom:15px;position:relative;overflow:hidden;font-size:14px;
+}
+.notice::after{
+    content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+    background:linear-gradient(90deg,transparent,#ffffff11,transparent);
+    animation:slide 4s infinite;
+}
+@keyframes slide{100%{left:100%}}
+.apply-box{
+    background:#152046;padding:15px;text-align:center;
+    border-radius:8px;margin-bottom:15px;border:1px solid #00ccff;
+    animation:neon 4s infinite alternate;font-size:14px;
+}
+.team-box{
+    background:#152046;border-radius:8px;padding:15px;margin-bottom:15px;
+    border:1px solid #00ccff;animation:neon 4s infinite alternate;
+}
+.team-title{font-size:18px;color:#00ffcc;margin-bottom:10px;text-shadow:0 0 6px #00ffcc}
+.leader{color:#ffcc00;font-weight:bold;margin-bottom:10px;text-shadow:0 0 4px #ffcc00;font-size:14px;}
+.member-list{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+    gap:6px;font-size:13px;
+}
+.member{
+    background:#202b5a;padding:6px 8px;border-radius:4px;
+    transition:.2s;border:1px solid #00669955;white-space:nowrap;overflow:hidden;
+}
+.member:hover{background:#2a3870;transform:translateY(-2px);box-shadow:0 0 6px #0099ff}
+.edit-area{margin-top:10px;display:none;}
+.count{color:#00ccff;margin-left:10px;font-size:12px}
+</style>
+</head>
+<body>
+
+<div class="login-bar">
+    <input type="password" id="pwd" placeholder="管理密码">
+    <button onclick="login()">登录管理</button>
+    <button onclick="logout()">退出管理</button>
+</div>
+
+<div class="logo">众神阁</div>
+
+<div class="slogan">
+打造第一金牌社团，接代肝，招打手 美女高手多多，欢迎各位新老玩家的加入<br>
+加社团先改名再点击申请<br>
+一队：众神阁丶 　二队：众神阁丶二队
+</div>
+
+<div class="notice" id="notice">
+【众神阁公告】欢迎各路大神加入！入队请统一改名：众神阁丶XXX
+</div>
+<div class="edit-area" id="noticeEdit">
+    <input id="newNotice" style="width:240px" placeholder="修改公告">
+    <button onclick="changeNotice()">修改公告</button>
+</div>
+
+<div class="apply-box">
+    <h3 style="color:#00ffcc; margin-bottom:8px; font-size:16px;">📩 入队申请</h3>
+    <input id="applyName" placeholder="输入游戏ID">
+    <button onclick="apply()">提交申请</button>
+    <div id="applyTip" style="margin-top:8px;color:#ffcc00;"></div>
+</div>
+
+<!-- 一队 -->
+<div class="team-box">
+    <div class="team-title">【一队】众神阁丶 <span id="count1" class="count"></span></div>
+    <div class="leader" id="leader1">队长：众神阁丶恋曲　｜　副队长：众神阁丶过客</div>
+    <div id="team1" class="member-list"></div>
+    <div class="edit-area" id="edit1">
+        <input id="add1" placeholder="添加成员">
+        <button onclick="addMember(1)">添加</button>
+    </div>
+</div>
+
+<!-- 二队 -->
+<div class="team-box">
+    <div class="team-title">【二队】众神阁丶二队 <span id="count2" class="count"></span></div>
+    <div class="leader" id="leader2">队长：未设置　｜　副队长：未设置</div>
+    <div class="edit-area" id="leader2Edit">
+        <input id="leader2Input" placeholder="二队队长">
+        <input id="viceLeader2Input" placeholder="二队副队长">
+        <button onclick="setLeader2()">保存</button>
+    </div>
+    <div id="team2" class="member-list"></div>
+    <div class="edit-area" id="edit2">
+        <input id="add2" placeholder="添加成员">
+        <button onclick="addMember(2)">添加</button>
+    </div>
+</div>
+
+<script>
+let isAdmin = false;
+const PASSWORD = "admin";
+const MAX_MEMBER = 100; // 每队最高100人
+
+const team1 = [
+"众神阁丶过客","众神阁丶阁主","众神阁丶春","众神阁丶陈陈","众神阁丶风动",
+"众神阁丶秋风萧","众神阁丶卒","众神阁丶恋曲","众神阁丶倾慕","众神阁丶凯凯",
+"众神阁丶冷邪","众神阁丶雪花","众神阁丶良民","众神阁丶繁花","众神阁丶莫",
+"众神阁丶豆豆","众神阁丶懒","众神阁丶炫迈","众神阁丶轻轻","众神阁丶北风",
+"众神阁丶龍泉","众神阁丶奶昔","众神阁丶林之新","众神阁丶某糖","众神阁丶忘末",
+"众神阁丶兜兜","众神阁丶随风","众神阁丶无情","众神阁丶白云","众神阁丶枫枫",
+"众神阁丶太空兔","众神阁丶奇迹","众神阁丶浅星允","众神阁丶小熊","众神阁丶王礼杜",
+"众神阁丶战神","众神阁丶柠檬","众神阁丶情绪","众神阁丶龙皇","众神阁丶玖哥",
+"众神阁丶散人","众神阁丶欧皇","众神阁丶闲云","众神阁丶碎冰冰","众神阁丶东风",
+"众神阁丶戏子","众神阁丶浪迹","众神阁丶永恒","众神阁丶蟾蜍","众神阁丶小疯狂",
+"众神阁丶释然","众神阁丶安听","众神阁丶酒馆","众神阁丶花若怜","众神阁丶村长",
+"众神阁丶天隐","众神阁丶公子哥","众神阁丶少校","众神阁丶白羊","众神阁丶皎月",
+"众神阁丶管家","众神阁丶懒洋洋","众神阁丶无簪","众神阁丶潇湘","众神阁丶炮灰",
+"众神阁丶Sasha","众神阁丶离人泪","众神阁丶慕楠","众神阁丶大师","众神阁丶陌离",
+"众神阁丶泡泡","众神阁丶木丨木","众神阁丶欢愉","众神阁丶诗涵i","众神阁丶四级",
+"众神阁丶冰山","众神阁丶悠悠","众神阁丶哦哟","众神阁丶道一","众神阁丶奕星",
+"众神阁丶凉城","众神阁丶星徽","众神阁丶六月","众神阁丶御词姐","众神阁丶幻想",
+"众神阁丶踏雪","众神阁丶晨钦","众神阁丶Animy","众神阁丶牢漠","众神阁丶原神",
+"众神阁丶天尊","众神阁丶潜蛟","众神阁丶星辰","众神阁丶归门","众神阁丶陆",
+"众神阁丶华强i","众神阁丶曾愛ta","众神阁丶聂北","众神阁丶千欲","众神阁丶高启强"
+];
+
+let team2 = [];
+
+function render(){
+    renderTeam("team1", team1);
+    renderTeam("team2", team2);
+    document.getElementById("count1").innerText = "人数："+team1.length+"/"+MAX_MEMBER;
+    document.getElementById("count2").innerText = "人数："+team2.length+"/"+MAX_MEMBER;
+}
+
+function renderTeam(id, list){
+    const el = document.getElementById(id);
+    el.innerHTML = "";
+    list.forEach((name,i)=>{
+        const d = document.createElement("div");
+        d.className = "member";
+        d.innerText = name;
+        if(isAdmin){
+            const btn = document.createElement("button");
+            btn.innerText = "删";
+            btn.style.fontSize="10px";
+            btn.style.marginLeft="4px";
+            btn.style.padding="2px 4px";
+            btn.onclick=()=>{
+                id=="team1"?team1.splice(i,1):team2.splice(i,1);
+                render();
+            }
+            d.appendChild(btn);
+        }
+        el.appendChild(d);
+    })
+}
+
+function login(){
+    if(document.getElementById("pwd").value === PASSWORD){
+        isAdmin = true;
+        alert("登录成功！");
+        document.querySelectorAll(".edit-area").forEach(e=>e.style.display="block");
+        render();
+    }else{
+        alert("密码错误");
+    }
+}
+
+function logout(){
+    isAdmin = false;
+    alert("已退出管理");
+    document.querySelectorAll(".edit-area").forEach(e=>e.style.display="none");
+    render();
+}
+
+function addMember(team){
+    const val = team==1 ? document.getElementById("add1").value : document.getElementById("add2").value;
+    if(!val) return;
+
+    if(team==1){
+        if(team1.length >= MAX_MEMBER){
+            alert("一队人数已达上限100人，无法添加！");
+            return;
+        }
+        team1.push(val);
+    }else{
+        if(team2.length >= MAX_MEMBER){
+            alert("二队人数已达上限100人，无法添加！");
+            return;
+        }
+        team2.push(val);
+    }
+    render();
+}
+
+function changeNotice(){
+    const txt = document.getElementById("newNotice").value;
+    if(txt) document.getElementById("notice").innerText = txt;
+}
+
+function setLeader2(){
+    const leader = document.getElementById("leader2Input").value;
+    const vice = document.getElementById("viceLeader2Input").value;
+    if(leader && vice){
+        document.getElementById("leader2").innerText = "队长："+leader+"　｜　副队长："+vice;
+    }
+}
+
+function apply(){
+    const name = document.getElementById("applyName").value;
+    if(name){
+        document.getElementById("applyTip").innerText = "申请已提交，队长审核中";
+    }else{
+        document.getElementById("applyTip").innerText = "请输入你的游戏ID";
+    }
+}
+
+render();
+</script>
+</body>
+</html>
